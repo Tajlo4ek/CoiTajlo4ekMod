@@ -45,7 +45,7 @@ namespace Tajlo4ekMod.InfStorage
 
             Proto.Str protoString = Proto.CreateStr(IdInfLoose, "Inf loose", "Inf loose");
 
-            InfStoragePrototype bp = new(IdInfLoose, protoString, entryLayout, ProductFilter, ProductType.ANY, 500.Quantity(), entryCost.MapToEntityCosts(registrator), 1000.Quantity(), 1.Ticks(), Electricity.Zero, gfx);
+            InfStoragePrototype bp = new(IdInfLoose, protoString, entryLayout, ProductFilter, LooseProductProto.ProductType, 500.Quantity(), entryCost.MapToEntityCosts(registrator), 1000.Quantity(), 1.Ticks(), Electricity.Zero, gfx);
             registrator.PrototypesDb.Add(bp);
         }
     }
