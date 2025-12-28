@@ -1,16 +1,19 @@
 ﻿using Mafi;
 using Mafi.Core;
+using Mafi.Core.Buildings.Storages;
 using Mafi.Core.Entities;
 using Mafi.Core.Entities.Static.Layout;
 using Mafi.Core.Ports;
 using Mafi.Core.Ports.Io;
 using Mafi.Core.Products;
+using Mafi.Core.Simulation;
+using Mafi.Core.Vehicles;
 using Mafi.Serialization;
 using System;
 
 namespace Tajlo4ekMod.InfStorage
 {
-    public class InfStorage : LayoutEntity, IEntityWithSimUpdate, IEntityWithPorts
+    public class InfStorage : Storage, IEntityWithSimUpdate, IEntityWithPorts
     {
         private static readonly Action<object, BlobWriter> s_serializeDataDelayedAction;
         private static readonly Action<object, BlobReader> s_deserializeDataDelayedAction;
@@ -18,10 +21,11 @@ namespace Tajlo4ekMod.InfStorage
         readonly LayoutEntityProto proto;
         ProductQuantity storedProd;
 
-        public InfStorage(EntityId id, LayoutEntityProto proto, TileTransform transform, EntityContext context)
-            : base(id, proto, transform, context)
+
+        public InfStorage(EntityId id, StorageProto storageProto, TileTransform transform, EntityContext context, ISimLoopEvents simLoopEvents, IVehiclesManager vehiclesManager, IVehicleBuffersRegistry vehicleBuffersRegistry)
+            : base(id, storageProto, transform, context, simLoopEvents, vehiclesManager, vehicleBuffersRegistry)
         {
-            this.proto = proto;
+            this.proto = storageProto;
             storedProd = ProductQuantity.None;
         }
 
@@ -79,7 +83,7 @@ namespace Tajlo4ekMod.InfStorage
             writer.WriteGeneric(storedProd);
         }
 
-        public static InfStorage Deserialize(BlobReader reader)
+        public static new InfStorage Deserialize(BlobReader reader)
         {
             if (reader.TryStartClassDeserialization(out InfStorage obj, null))
             {
