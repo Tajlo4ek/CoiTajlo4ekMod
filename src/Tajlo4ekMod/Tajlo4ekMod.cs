@@ -4,6 +4,7 @@ using Mafi.Core;
 using Mafi.Core.Game;
 using Mafi.Core.Mods;
 using Mafi.Core.Prototypes;
+using Tajlo4ekMod.fastStacker;
 using Tajlo4ekMod.InfStorage;
 using Tajlo4ekMod.train;
 
@@ -44,6 +45,7 @@ public sealed class Tajlo4ekMod : IMod
 
         registrator.RegisterData<InfStorageRegistrator>();
         registrator.RegisterData<TrainRegistrator>();
+        registrator.RegisterData<FastStacker>();
 
     }
 
