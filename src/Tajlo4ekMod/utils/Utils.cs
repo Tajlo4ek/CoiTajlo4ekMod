@@ -1,7 +1,7 @@
 ﻿using Mafi.Core.Mods;
+using Mafi.Core.Prototypes;
 using System;
 using System.Reflection;
-using Mafi.Core.Prototypes;
 
 namespace Tajlo4ekMod.utils
 {

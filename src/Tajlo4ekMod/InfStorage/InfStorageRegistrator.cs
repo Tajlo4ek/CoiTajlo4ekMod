@@ -15,8 +15,6 @@ namespace Tajlo4ekMod.InfStorage
 
         public static bool ProductFilter(ProductProto prod)
         {
-            if (prod == null) { return false; }
-
             return prod.Id == Ids.Products.Coal
                 || prod.Id == Ids.Products.IronOre
                 || prod.Id == Ids.Products.CopperOre

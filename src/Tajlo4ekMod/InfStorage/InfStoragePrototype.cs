@@ -5,9 +5,6 @@ using Mafi.Core.Products;
 using Mafi.Core.Prototypes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tajlo4ekMod.InfStorage
 {
@@ -15,7 +12,7 @@ namespace Tajlo4ekMod.InfStorage
     {
         public InfStoragePrototype(ID id, Str strings, EntityLayout layout,
             Func<ProductProto, bool> productsFilter, ProductType? productType, Quantity capacity,
-            EntityCosts costs, Quantity transferLimit, Duration transferLimitDuration, 
+            EntityCosts costs, Quantity transferLimit, Duration transferLimitDuration,
             Electricity powerConsumedForProductsExchange, Gfx graphics, IEnumerable<Tag> tags = null)
             : base(id, strings, layout, productsFilter, productType, capacity, costs, transferLimit, transferLimitDuration, powerConsumedForProductsExchange, graphics, tags)
         {
