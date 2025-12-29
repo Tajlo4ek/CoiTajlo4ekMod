@@ -33,24 +33,34 @@ namespace Tajlo4ekMod.utils
             }
 
             var field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-            if (field != null)
+            var prop = type.GetProperty(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+
+
+            try
             {
-                try
+                if (field != null)
                 {
                     field.SetValue(obj, newValue);
                 }
-                catch (Exception ex)
+                else if (prop != null)
                 {
-                    Logger.Log(ex.ToString());
-                    Logger.Log("error set " + fieldName);
+                    prop.SetValue(obj, newValue);
+                }
+                else
+                {
+                    Logger.Log("error get field " + fieldName);
                     return;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Logger.Log("error get field " + fieldName);
+                Logger.Log(ex.ToString());
+                Logger.Log("error set " + fieldName);
                 return;
             }
+
+
+
         }
     }
 }
