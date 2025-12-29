@@ -6,13 +6,13 @@ using Mafi.Unity.Ui.Library.Inspectors;
 using Mafi.Unity.UiToolkit.Library;
 using System.Linq;
 
-namespace Tajlo4ekMod.InfStorage
+namespace Tajlo4ekMod.voidMashines
 {
-    public class InfStorageInspector : BaseInspector<InfStorage>
+    public class VoidGeneratorInspector : BaseInspector<VoidGenerator>
     {
         readonly Dropdown<ProductProto> storedProduct;
 
-        public InfStorageInspector(UiContext context) : base(context)
+        public VoidGeneratorInspector(UiContext context) : base(context)
         {
             storedProduct = new Dropdown<ProductProto>(delegate (ProductProto pickProto, int _, bool _)
             {
@@ -25,7 +25,7 @@ namespace Tajlo4ekMod.InfStorage
             }, null, null, false)
                 .SetOptions((from proto in context.ProtosDb.All<ProductProto>()
                              where proto.IsInitialized
-                             where InfStorageRegistrator.ProductFilter(proto)
+                             where VoidGeneratorRegistrator.ProductFilter(proto)
                              orderby proto.Strings.Name.ToString()
                              select proto).ToImmutableArray()).SetValueIndex(0, false).OnValueChanged(delegate (ProductProto changedProto, int _)
                              {

@@ -1,5 +1,4 @@
-﻿using Mafi;
-using Mafi.Base;
+﻿using Mafi.Base;
 using Mafi.Collections.ImmutableCollections;
 using Mafi.Core.Entities.Static.Layout;
 using Mafi.Core.Factory.Machines;
@@ -7,11 +6,11 @@ using Mafi.Core.Mods;
 using Mafi.Core.Products;
 using Mafi.Core.Prototypes;
 
-namespace Tajlo4ekMod.InfStorage
+namespace Tajlo4ekMod.voidMashines
 {
-    public class InfStorageRegistrator : IModData
+    public class VoidGeneratorRegistrator : IModData
     {
-        public static readonly MachineProto.ID IdInfLoose = Ids.Machines.CreateId("TAJLO4EK_infLoose");
+        public static readonly MachineProto.ID IdVoidGenerator = Ids.Machines.CreateId("TAJLO4EK_voidGenerator");
 
         public static bool ProductFilter(ProductProto prod)
         {
@@ -28,23 +27,23 @@ namespace Tajlo4ekMod.InfStorage
         public void RegisterData(ProtoRegistrator registrator)
         {
             EntityLayout entryLayout = registrator.LayoutParser.ParseLayoutOrThrow(
-                 "   [6][6][6][6][6]   ",
-                 "A~>[6][6][6][6][6]>~X",
-                 "   [6][6][6][6][6]   ",
-                 "B~>[6][6][6][6][6]>~Y",
-                 "   [6][6][6][6][6]   ");
+               "   [3][3][3][3][3]   ",
+               "   [3][3][3][3][3]>~X",
+               "   [3][3][3][3][3]   ");
 
             EntityCostsTpl entryCost = new EntityCostsTpl.Builder().CP(50);
 
             LayoutEntityProto.Gfx gfx =
-                new("Assets/Base/Buildings/Storages/LooseT2.prefab",
-                    customIconPath: "Assets/Unity/Generated/Icons/LayoutEntity/StorageLooseT2.png",
+                new("Assets/Base/Machines/Waste/Compactor.prefab",
+                    customIconPath: "Assets/Unity/Generated/Icons/LayoutEntity/Compactor.png",
                     categories: new ImmutableArray<ToolbarEntryData>?(registrator.GetCategoriesProtos(Ids.ToolbarCategories.Storages)));
 
-            Proto.Str protoString = Proto.CreateStr(IdInfLoose, "Inf loose", "Inf loose");
+            Proto.Str protoString = Proto.CreateStr(IdVoidGenerator, "Void generator", "Void generator");
 
-            InfStoragePrototype bp = new(IdInfLoose, protoString, entryLayout, ProductFilter, LooseProductProto.ProductType, 500.Quantity(), entryCost.MapToEntityCosts(registrator), 1000.Quantity(), 1.Ticks(), Electricity.Zero, gfx);
-            registrator.PrototypesDb.Add(bp);
+            VoidGeneratorPrototype proto = new(IdVoidGenerator, protoString, entryLayout, entryCost.MapToEntityCosts(registrator), gfx);
+
+            proto.SetAvailability(true);
+            registrator.PrototypesDb.Add(proto);
         }
     }
 }

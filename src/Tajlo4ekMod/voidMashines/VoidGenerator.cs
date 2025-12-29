@@ -1,32 +1,29 @@
 ﻿using Mafi;
 using Mafi.Core;
-using Mafi.Core.Buildings.Storages;
 using Mafi.Core.Entities;
 using Mafi.Core.Entities.Static.Layout;
 using Mafi.Core.Ports;
 using Mafi.Core.Ports.Io;
 using Mafi.Core.Products;
-using Mafi.Core.Simulation;
-using Mafi.Core.Vehicles;
 using Mafi.Serialization;
 using System;
 
-namespace Tajlo4ekMod.InfStorage
+namespace Tajlo4ekMod.voidMashines
 {
-    public class InfStorage : Storage, IEntityWithSimUpdate, IEntityWithPorts
+    public class VoidGenerator : LayoutEntity, IEntityWithSimUpdate, IEntityWithPorts
     {
         private static readonly Action<object, BlobWriter> s_serializeDataDelayedAction;
         private static readonly Action<object, BlobReader> s_deserializeDataDelayedAction;
 
         readonly LayoutEntityProto proto;
-        ProductQuantity storedProd;
+        ProductQuantity generateProd;
 
 
-        public InfStorage(EntityId id, StorageProto storageProto, TileTransform transform, EntityContext context, ISimLoopEvents simLoopEvents, IVehiclesManager vehiclesManager, IVehicleBuffersRegistry vehicleBuffersRegistry)
-            : base(id, storageProto, transform, context, simLoopEvents, vehiclesManager, vehicleBuffersRegistry)
+        public VoidGenerator(EntityId id, LayoutEntityProto proto, TileTransform transform, EntityContext context)
+            : base(id, proto, transform, context)
         {
-            this.proto = storageProto;
-            storedProd = ProductQuantity.None;
+            this.proto = proto;
+            generateProd = ProductQuantity.None;
         }
 
         public override bool CanBePaused => true;
@@ -38,12 +35,12 @@ namespace Tajlo4ekMod.InfStorage
 
         public void SetProduct(ProductProto prod)
         {
-            storedProd = new ProductQuantity(prod, 1000.Quantity());
+            generateProd = new ProductQuantity(prod, 1000.Quantity());
         }
 
         public ProductProto GetProduct()
         {
-            return storedProd.Product;
+            return generateProd.Product;
         }
 
         public void SimUpdate()
@@ -53,9 +50,9 @@ namespace Tajlo4ekMod.InfStorage
                 return;
             }
 
-            if (storedProd != ProductQuantity.None)
+            if (generateProd != ProductQuantity.None)
             {
-                SendToOuputPort(storedProd);
+                SendToOuputPort(generateProd);
             }
         }
 
@@ -68,7 +65,7 @@ namespace Tajlo4ekMod.InfStorage
 
         }
 
-        public static void Serialize(InfStorage value, BlobWriter writer)
+        public static void Serialize(VoidGenerator value, BlobWriter writer)
         {
             if (writer.TryStartClassSerialization(value))
             {
@@ -80,12 +77,12 @@ namespace Tajlo4ekMod.InfStorage
         {
             base.SerializeData(writer);
             writer.WriteGeneric(proto);
-            writer.WriteGeneric(storedProd);
+            writer.WriteGeneric(generateProd);
         }
 
-        public static new InfStorage Deserialize(BlobReader reader)
+        public static new VoidGenerator Deserialize(BlobReader reader)
         {
-            if (reader.TryStartClassDeserialization(out InfStorage obj, null))
+            if (reader.TryStartClassDeserialization(out VoidGenerator obj, null))
             {
                 reader.EnqueueDataDeserialization(obj, s_deserializeDataDelayedAction);
             }
@@ -95,20 +92,21 @@ namespace Tajlo4ekMod.InfStorage
         protected override void DeserializeData(BlobReader reader)
         {
             base.DeserializeData(reader);
-            reader.SetField(this, "proto", reader.ReadGenericAs<InfStoragePrototype>());
-            reader.SetField(this, "storedProd", reader.ReadGenericAs<ProductQuantity>());
+            reader.SetField(this, "proto", reader.ReadGenericAs<VoidGeneratorPrototype>());
+            reader.SetField(this, "generateProd", reader.ReadGenericAs<ProductQuantity>());
         }
 
-        static InfStorage()
+        static VoidGenerator()
         {
             s_serializeDataDelayedAction = delegate (object obj, BlobWriter writer)
             {
-                ((InfStorage)obj).SerializeData(writer);
+                ((VoidGenerator)obj).SerializeData(writer);
             };
             s_deserializeDataDelayedAction = delegate (object obj, BlobReader reader)
             {
-                ((InfStorage)obj).DeserializeData(reader);
+                ((VoidGenerator)obj).DeserializeData(reader);
             };
         }
+
     }
 }

@@ -5,8 +5,8 @@ using Mafi.Core.Game;
 using Mafi.Core.Mods;
 using Mafi.Core.Prototypes;
 using Tajlo4ekMod.fastStacker;
-using Tajlo4ekMod.InfStorage;
 using Tajlo4ekMod.train;
+using Tajlo4ekMod.voidMashines;
 
 
 namespace Tajlo4ekMod;
@@ -17,7 +17,7 @@ public sealed class Tajlo4ekMod : IMod
 
     public string Name => "TAJLO4EK mod";
 
-    public int Version => 1;
+    public int Version => 2;
 
     bool IMod.IsUiOnly => false;
 
@@ -43,7 +43,7 @@ public sealed class Tajlo4ekMod : IMod
     {
         Logger.Log("RegisterPrototypes");
 
-        registrator.RegisterData<InfStorageRegistrator>();
+        registrator.RegisterData<VoidGeneratorRegistrator>();
         registrator.RegisterData<TrainRegistrator>();
         registrator.RegisterData<FastStacker>();
 
