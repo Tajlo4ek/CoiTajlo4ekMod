@@ -7,22 +7,25 @@ using Mafi.Core.Ports.Io;
 using Mafi.Core.Products;
 using Mafi.Serialization;
 using System;
+using static Mafi.Core.Entities.EntityProto;
 
 namespace Tajlo4ekMod.voidMashines
 {
-    public class VoidGenerator : LayoutEntity, IEntityWithSimUpdate, IEntityWithPorts
+    public class VoidGenerator : LayoutEntity, IEntityWithSimUpdate, IEntityWithPorts, IEntityWithCloneableConfig
     {
         private static readonly Action<object, BlobWriter> s_serializeDataDelayedAction;
         private static readonly Action<object, BlobReader> s_deserializeDataDelayedAction;
 
         readonly LayoutEntityProto proto;
         ProductQuantity generateProd;
+        EntityContext context;
 
 
         public VoidGenerator(EntityId id, LayoutEntityProto proto, TileTransform transform, EntityContext context)
             : base(id, proto, transform, context)
         {
             this.proto = proto;
+            this.context = context;
             generateProd = ProductQuantity.None;
         }
 
@@ -80,7 +83,7 @@ namespace Tajlo4ekMod.voidMashines
             writer.WriteGeneric(generateProd);
         }
 
-        public static new VoidGenerator Deserialize(BlobReader reader)
+        public static VoidGenerator Deserialize(BlobReader reader)
         {
             if (reader.TryStartClassDeserialization(out VoidGenerator obj, null))
             {
@@ -94,6 +97,25 @@ namespace Tajlo4ekMod.voidMashines
             base.DeserializeData(reader);
             reader.SetField(this, "proto", reader.ReadGenericAs<VoidGeneratorPrototype>());
             reader.SetField(this, "generateProd", reader.ReadGenericAs<ProductQuantity>());
+        }
+
+        public void AddToConfig(EntityConfigData data)
+        {
+            data.SetString("generateProd", generateProd.Product.Id.ToString());
+        }
+
+        public void ApplyConfig(EntityConfigData data)
+        {
+            var strId = data.GetString("generateProd");
+            if (strId.HasValue)
+            {
+                var id = new ID(strId.Value);
+                var proto = context.ProtosDb.Get<ProductProto>(id);
+                if (proto.HasValue)
+                {
+                    SetProduct(proto.Value);
+                }
+            }
         }
 
         static VoidGenerator()
